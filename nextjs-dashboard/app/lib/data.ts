@@ -9,8 +9,13 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { unstable_noStore } from 'next/cache';
+// You can use a Next.js API called unstable_noStore inside your Server Components or data fetching functions to opt out of static rendering. Let's add this.
+// import { unstable_noStore as noStore } from 'next/cache';
+
 
 export async function fetchRevenue() {
+  // noStore();
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
 
@@ -19,7 +24,7 @@ export async function fetchRevenue() {
     // Don't do this in production :)
 
     // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    // await new Promise((resolve) => setTimeout(resolve, 10000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
@@ -33,6 +38,7 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+      // await new Promise((resolve) => setTimeout(resolve, 15000));
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -53,10 +59,12 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  // noStore();
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
+        // await new Promise((resolve) => setTimeout(resolve, 5000));
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
@@ -145,6 +153,8 @@ export async function fetchInvoicesPages(query: string) {
 }
 
 export async function fetchInvoiceById(id: string) {
+  unstable_noStore();
+
   try {
     const data = await sql<InvoiceForm>`
       SELECT
