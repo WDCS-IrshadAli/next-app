@@ -47,11 +47,13 @@ export async function createInvoice(prevState: State, formData: FormData) {
     // console.log(validatedFields?.error);
     // If form validation fails, return errors early. Otherwise, continue.
     // console.log("SEEEEEEEEEEEE", validatedFields.error.flatten());
-    
+// console.log(validatedFields.error.flatten);
+
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
         message: 'Missing Fields. Failed to Create Invoice.',
+        custom: validatedFields.error.flatten(),
       };
     }
 
