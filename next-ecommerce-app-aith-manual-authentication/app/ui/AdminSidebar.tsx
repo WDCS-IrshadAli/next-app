@@ -12,13 +12,15 @@ import {
 import {
   CalendarIcon,
   EnvelopeClosedIcon,
-  FaceIcon,
+  TokensIcon,
+  LayersIcon,
   GearIcon,
   PersonIcon,
   CodeSandboxLogoIcon,
   RocketIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { userLogout } from "../lib/actions";
 
 const AdminSidebar = () => {
   return (
@@ -34,7 +36,7 @@ const AdminSidebar = () => {
 
             <CommandItem className="flex justify-center sm:justify-start items-center p-0 sm:p-1 mb-1">
               <Link href="/admin/dashboard">
-                <CalendarIcon className="h-6 w-6 py-1 px-0" />
+                <TokensIcon className="h-6 w-6 py-1 px-0" />
               </Link>
               <span className="truncate w-full">
                 <Link href="/admin/dashboard" className="">Dashboard</Link>
@@ -59,6 +61,15 @@ const AdminSidebar = () => {
               </span>
             </CommandItem>
 
+            <CommandItem className="flex justify-center sm:justify-start items-center p-0 sm:p-1 mb-1">
+              <Link href="/admin/categories">
+                <LayersIcon className="h-6 w-6 py-1 px-0" />
+              </Link>
+              <span className="truncate w-full">
+                <Link href="/admin/categories" className="">Categories</Link>
+              </span>
+            </CommandItem>
+
           </CommandGroup>
 
 
@@ -68,29 +79,11 @@ const AdminSidebar = () => {
           <CommandGroup heading="Settings">
 
             <CommandItem className="flex justify-center sm:justify-start items-center p-0 sm:p-1 mb-1">
-              <Link href="/admin/categories">
-                <PersonIcon className="h-6 w-6 py-1 px-0" />
-              </Link>
-              <span className="truncate w-full">
-                <Link href="/admin/categories" className="">Profile</Link>
-              </span>
-            </CommandItem>
-
-            <CommandItem className="flex justify-center sm:justify-start items-center p-0 sm:p-1 mb-1">
-              <Link href="/admin/categories">
+              <button onClick={() => {userLogout()}}>
                 <GearIcon className="h-6 w-6 py-1 px-0" />
-              </Link>
+              </button>
               <span className="truncate w-full">
-                <Link href="/admin/categories" className="">Settings</Link>
-              </span>
-            </CommandItem>
-
-            <CommandItem className="flex justify-center sm:justify-start items-center p-0 sm:p-1 mb-1">
-              <Link href="/admin/categories">
-                <GearIcon className="h-6 w-6 py-1 px-0" />
-              </Link>
-              <span className="truncate w-full">
-                <Link href="/admin/categories" className="">Logout</Link>
+              <button onClick={() => {userLogout()}}>Logout</button>
               </span>
             </CommandItem>
 

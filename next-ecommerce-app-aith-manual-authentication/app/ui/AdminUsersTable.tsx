@@ -39,27 +39,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import Image from 'next/image'
-import { deleteProduct } from "../lib/actions"
+import { deleteUsers } from "../lib/actions"
 import { useFormState } from "react-dom"
 import { Toaster, toast } from "sonner"
-import { useRouter } from "next/navigation"
 
-
-export type ProductsProps = {
-  id: number,
-  title: string,
-  price: number,
-  description: string,
-  category: string,
-  image: string,
-  rating: {
-    rate: number,
-    count: number
-  }
-}
-
-export const columns: ColumnDef<ProductsProps>[] = [
+export const columns: ColumnDef<UsersProps>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -83,58 +67,57 @@ export const columns: ColumnDef<ProductsProps>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "image",
-    header: "Image",
+    accessorKey: "name",
+    header: "Name",
     cell: ({ row }) => (
-      <Image src={row.getValue("image")} alt="image" width="12" height="12" className="h-10 w-10 m-2 rounded-full object-contain p-2 bg-white" />
+      <div className="capitalize">{`${row.getValue("name")?.firstname} ${   row.getValue("name")?.lastname}`}</div>
     ),
   },
   {
-    accessorKey: "title",
+    accessorKey: "username",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Title
+          Username
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("title")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("username")}</div>,
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "email",
+    header: "Email",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("category")}</div>
+      <div className="capitalize">{row.getValue("email")}</div>
     ),
   },
   {
-    accessorKey: "price",
-    header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("price"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    },
+    accessorKey: "phone",
+    header: "Phone",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("phone")}</div>
+    ),
   },
+  {
+    accessorKey: "address",
+    header: "City",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("address")?.city}</div>
+    ),
+  },
+  
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
 
-      const router = useRouter();
       let delUserId: number = payment?.id;
-      const deleteWithId = deleteProduct.bind(null, delUserId);
+      const deleteWithId = deleteUsers.bind(null, delUserId);
       const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
       const [state, dispatch] = useFormState(deleteWithId, initialState);
       if (state.success === false) {
@@ -147,8 +130,6 @@ export const columns: ColumnDef<ProductsProps>[] = [
         state.message = null;
       }
 
-
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -159,21 +140,11 @@ export const columns: ColumnDef<ProductsProps>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment?.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <form action={dispatch}>
                 <button type="submit">Delete</button>
               </form>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
-                Edit
-              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -182,7 +153,7 @@ export const columns: ColumnDef<ProductsProps>[] = [
   },
 ]
 
-export default function AdminTable({ data }: { data: ProductsProps[] }) {
+export default function AdminUsersTable({ data }: { data: UsersProps[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -215,10 +186,10 @@ export default function AdminTable({ data }: { data: ProductsProps[] }) {
       <Toaster position="top-right" theme="dark" richColors />
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter title..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter username..."
+          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("username")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

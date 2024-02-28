@@ -1,24 +1,19 @@
 import {
     Menubar,
-    MenubarCheckboxItem,
     MenubarContent,
     MenubarItem,
     MenubarMenu,
-    MenubarRadioGroup,
-    MenubarRadioItem,
     MenubarSeparator,
-    MenubarShortcut,
-    MenubarSub,
-    MenubarSubContent,
-    MenubarSubTrigger,
     MenubarTrigger,
   } from "@/components/ui/menubar"
   import {
     GearIcon,
     PersonIcon,
     RocketIcon,
+    TokensIcon,
   } from "@radix-ui/react-icons"
 import Link from "next/link"
+import { userLogout } from "../lib/actions"
   
   export default function AdminNavbar() {
     return (
@@ -34,9 +29,8 @@ import Link from "next/link"
           <MenubarTrigger>Profiles</MenubarTrigger>
           <MenubarContent>
             
-            <MenubarItem><RocketIcon className="mr-2" /> <Link href="/admin/dashboard">Dashboard</Link></MenubarItem>
-            <MenubarItem><PersonIcon className="mr-2" /> <Link href="/admin/profile">Profile</Link></MenubarItem>
-            <MenubarItem><GearIcon className="mr-2" /> <Link href="/admin/logout">Logout</Link></MenubarItem>
+            <MenubarItem><TokensIcon className="mr-2" /> <Link href="/admin/dashboard">Dashboard</Link></MenubarItem>
+            <MenubarItem><GearIcon className="mr-2" /> <button onClick={() => userLogout()}>Logout</button></MenubarItem>
             
             <MenubarSeparator />
             <MenubarItem inset className="text-xs font-semibold">About this admin page</MenubarItem>

@@ -6,7 +6,7 @@ const UseFormStatusBtn = ({ children }: { children: any }) => {
     const { pending } = useFormStatus();
 
   return (
-    <Button variant="secondary" type="submit" disabled={pending}>{ pending ? "Loading..." : children }</Button>
+    <Button type="submit" disabled={pending}>{ pending ? "Loading..." : children }</Button>
   )
 }
 

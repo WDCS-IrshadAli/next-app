@@ -1,6 +1,8 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { cookies } from 'next/headers'
+import { redirect } from "next/navigation";
 const PRODUCT_IMG_SIZE = 1024 * 1024 * 1; //1mb
 const ACCEPTED_IMG_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
@@ -215,7 +217,7 @@ export const getSingleProduct = async (userId: number) => {
     }
 }
 
-// fetching all categories
+// fetching all categories ---------------------------------------------------
 export const getAllCategories = async () => {
     try {
         let data = await fetch('https://fakestoreapi.com/products/categories');
@@ -226,7 +228,7 @@ export const getAllCategories = async () => {
     }
 }
 
-// fetch all users
+// fetch all users -----------------------------------------------------------
 export const getAllUsers = async () => {
     try {
         let data = await fetch('https://fakestoreapi.com/users');
@@ -258,5 +260,95 @@ export const deleteUsers = async (userId: number, prevState: ProductFormStateTyp
             success: false,
             error: "Internal Server Error (Error came while deleting user data)"
         }
+    }
+}
+
+// user login 
+export const userLogin = async (prevState: ProductFormStateTypeProps, formData: FormData) => {
+    // product zod schema validation
+    const userSchema = z.object({
+        username: z.string().trim().min(3),
+        password: z.string(),
+    });
+
+    // validating data using zod schema
+    const validateFields = userSchema.safeParse({
+        username: formData.get("username"),
+        password: formData.get("password"),
+    })
+
+    // check if errors
+    if (!validateFields.success) {
+        const errorShow: any = validateFields.error.flatten().fieldErrors;
+        let key = Object.keys(errorShow)[0]!==undefined ? Object.keys(errorShow)[0] : "error";
+        let value = errorShow[Object.keys(errorShow)[0]]!==undefined ? `(${key}) ${errorShow[Object.keys(errorShow)[0]][0]}` : `(${key}) Something went wrong, while validating login form.`;
+        return {
+            error: value,
+            success: false
+        }
+    }
+
+    // console.log(validateFields.data);
+    try {
+        const { username, password } = validateFields.data;
+
+        let data = await fetch("https://fakestoreapi.com/auth/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username, password
+            })
+        })
+        data = await data.json();
+        if (!data?.token) {
+            return {
+                error: `Token not generated`,
+                success: false
+            }
+        } 
+        // const oneHour = 1 * 60 * 60 * 1000
+        cookies().set({
+            name: 'currentUser',
+            value: data?.token,
+            httpOnly: true,
+            path: '/',
+            // expires: Date.now() - oneHour,
+        });
+        console.log("User login successfully = ", data?.token);
+        console.log("Data = ", {username, password});
+        
+        revalidatePath("/admin/dashboard");
+        return {
+            message: "User Login successfully",
+            success: true
+        } 
+    } catch (err: any) {        
+        return {
+            error: `Internal Server Error (${err.message})`,
+            success: false
+        }
+    }
+}
+
+// logout user
+export const userLogout = async () => {
+    const cookiesList = cookies();
+    const hasCookie = cookiesList.has('currentUser');
+
+    if (hasCookie) {
+        cookies().delete('currentUser');
+        // return {
+        //     message: "User logged out successfully.",
+        //     success: true
+        // }
+        redirect("/authadmin/login");
+    } else {
+        // return {
+        //     error: "There is no cookie 404 error",
+        //     success: false
+        // }
+        redirect("/authadmin/login");
     }
 }

@@ -28,7 +28,7 @@ const Products = async () => {
       <div className="py-3 sm:py-6">
           <div className="flex flex-row justify-between mb-4 px-3 sm:px-6">
             <h1 className="text-2xl">Products</h1>
-            <Button variant="secondary">
+            <Button>
               <Link href="/admin/products/add">Add Products</Link>
             </Button>
           </div>

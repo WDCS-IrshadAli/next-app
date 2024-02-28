@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
       <div className={cn(
-          "min-h-screen bg-background font-sans antialiased dark text-white",
+          "min-h-screen font-sans antialiased bg-background dark text-primary",
         )}>
           <AdminLayoutResizable children={children} />
         </div>

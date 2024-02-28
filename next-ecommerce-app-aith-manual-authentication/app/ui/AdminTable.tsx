@@ -39,35 +39,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { deleteUsers } from "../lib/actions"
+import Image from 'next/image'
+import { deleteProduct } from "../lib/actions"
 import { useFormState } from "react-dom"
 import { Toaster, toast } from "sonner"
+import { useRouter } from "next/navigation"
 
-
-export type ProductsProps = {
-  id: number,
-  email: string,
-  username: string,
-  password: string,
-  name: { firstname: string, lastname: string },
-  phone: string,
-  address: {
-    geolocation: { lat: string, long: string },
-    city: string,
-    street: string,
-    number: number,
-    zipcode: string
-  }
-
-  price: number,
-  description: string,
-  category: string,
-  image: string,
-  rating: {
-    rate: number,
-    count: number
-  }
-}
 
 export const columns: ColumnDef<ProductsProps>[] = [
   {
@@ -93,57 +70,58 @@ export const columns: ColumnDef<ProductsProps>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "image",
+    header: "Image",
     cell: ({ row }) => (
-      <div className="capitalize">{`${row.getValue("name")?.firstname} ${   row.getValue("name")?.lastname}`}</div>
+      <Image src={row.getValue("image")} alt="image" width="12" height="12" className="h-10 w-10 m-2 rounded-full object-contain p-2 bg-white" />
     ),
   },
   {
-    accessorKey: "username",
+    accessorKey: "title",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Username
+          Title
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("username")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("title")}</div>,
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "category",
+    header: "Category",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("email")}</div>
+      <div className="capitalize">{row.getValue("category")}</div>
     ),
   },
   {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("phone")}</div>
-    ),
+    accessorKey: "price",
+    header: () => <div className="text-right">Price</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("price"))
+
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount)
+
+      return <div className="text-right font-medium">{formatted}</div>
+    },
   },
-  {
-    accessorKey: "address",
-    header: "City",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("address")?.city}</div>
-    ),
-  },
-  
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
 
+      const router = useRouter();
       let delUserId: number = payment?.id;
-      const deleteWithId = deleteUsers.bind(null, delUserId);
+      const deleteWithId = deleteProduct.bind(null, delUserId);
       const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
       const [state, dispatch] = useFormState(deleteWithId, initialState);
       if (state.success === false) {
@@ -156,6 +134,8 @@ export const columns: ColumnDef<ProductsProps>[] = [
         state.message = null;
       }
 
+
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -164,13 +144,23 @@ export const columns: ColumnDef<ProductsProps>[] = [
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="dark">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            {/* <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment?.id)}
+            >
+              Copy payment ID
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <form action={dispatch}>
                 <button type="submit">Delete</button>
               </form>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
+                Edit
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -179,7 +169,7 @@ export const columns: ColumnDef<ProductsProps>[] = [
   },
 ]
 
-export default function AdminUsersTable({ data }: { data: ProductsProps[] }) {
+export default function AdminTable({ data }: { data: ProductsProps[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -212,12 +202,12 @@ export default function AdminUsersTable({ data }: { data: ProductsProps[] }) {
       <Toaster position="top-right" theme="dark" richColors />
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter username..."
-          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter title..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("username")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm muted"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -225,7 +215,7 @@ export default function AdminUsersTable({ data }: { data: ProductsProps[] }) {
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="dark">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
