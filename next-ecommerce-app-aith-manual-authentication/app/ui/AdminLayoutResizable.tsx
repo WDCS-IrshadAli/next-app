@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import AdminNavbar from "./AdminNavbar";
 import AdminSidebar from "./AdminSidebar";
 
-const AdminLayoutResizable = ({children}: {children:any}) => {
+const AdminLayoutResizable = ({childrenx}: {childrenx:any}) => {
   const defaultLayout = [265, 440, 655];
   const defaultCollapsed = false;
   const navCollapsedSize = 4;
@@ -43,7 +43,7 @@ const AdminLayoutResizable = ({children}: {children:any}) => {
               <ResizableHandle />
               <ResizablePanel defaultSize={85}>
                 <div>
-                  <span className="font-semibold">{children}</span>
+                  <span className="font-semibold">{childrenx}</span>
                 </div>
               </ResizablePanel>
             </ResizablePanelGroup>

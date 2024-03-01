@@ -5,7 +5,7 @@ import AdminUsersTable from '@/app/ui/AdminUsersTable'
 
 const Users = async () => {
 
-  const getUsersData = await getAllUsers();  
+  const getUsersData: any = await getAllUsers();  
 
   return (
     <>

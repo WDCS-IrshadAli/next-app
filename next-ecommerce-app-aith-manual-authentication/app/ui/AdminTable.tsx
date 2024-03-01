@@ -45,7 +45,6 @@ import { useFormState } from "react-dom"
 import { Toaster, toast } from "sonner"
 import { useRouter } from "next/navigation"
 
-
 export const columns: ColumnDef<ProductsProps>[] = [
   {
     id: "select",
@@ -118,53 +117,7 @@ export const columns: ColumnDef<ProductsProps>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
-
-      const router = useRouter();
-      let delUserId: number = payment?.id;
-      const deleteWithId = deleteProduct.bind(null, delUserId);
-      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
-      const [state, dispatch] = useFormState(deleteWithId, initialState);
-      if (state.success === false) {
-        toast.error(state.error);
-        state.success = null;
-        state.error = null;
-      } else if (state.success === true) {
-        toast.success(state.message);
-        state.success = null;
-        state.message = null;
-      }
-
-
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="dark">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment?.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <form action={dispatch}>
-                <button type="submit">Delete</button>
-              </form>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
-                Edit
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      <ActionsDropdownSelectX payment={payment} />
     },
   },
 ]
@@ -312,4 +265,55 @@ export default function AdminTable({ data }: { data: ProductsProps[] }) {
       </div>
     </div>
   )
+}
+
+// customs mine function
+export function ActionsDropdownSelectX ({ payment }: {payment: any}) {
+  const router = useRouter();
+
+      let delUserId: number = payment?.id;
+      const deleteWithId = deleteProduct.bind(null, delUserId);
+      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      const [state, dispatch] = useFormState(deleteWithId, initialState);
+      if (state.success === false) {
+        toast.error(state.error);
+        state.success = null;
+        state.error = null;
+      } else if (state.success === true) {
+        toast.success(state.message);
+        state.success = null;
+        state.message = null;
+      }
+
+
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="dark">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            {/* <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment?.id)}
+            >
+              Copy payment ID
+            </DropdownMenuItem> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <form action={dispatch}>
+                <button type="submit">Delete</button>
+              </form>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
+                Edit
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
 }

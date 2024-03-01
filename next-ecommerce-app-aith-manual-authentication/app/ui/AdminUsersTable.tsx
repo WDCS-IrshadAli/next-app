@@ -69,7 +69,7 @@ export const columns: ColumnDef<UsersProps>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{`${row.getValue("name")?.firstname} ${   row.getValue("name")?.lastname}`}</div>
     ),
   },
@@ -105,7 +105,7 @@ export const columns: ColumnDef<UsersProps>[] = [
   {
     accessorKey: "address",
     header: "City",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{row.getValue("address")?.city}</div>
     ),
   },
@@ -115,40 +115,8 @@ export const columns: ColumnDef<UsersProps>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
-
-      let delUserId: number = payment?.id;
-      const deleteWithId = deleteUsers.bind(null, delUserId);
-      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
-      const [state, dispatch] = useFormState(deleteWithId, initialState);
-      if (state.success === false) {
-        toast.error(state.error);
-        state.success = null;
-        state.error = null;
-      } else if (state.success === true) {
-        toast.success(state.message);
-        state.success = null;
-        state.message = null;
-      }
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <form action={dispatch}>
-                <button type="submit">Delete</button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      <ActionsDropdownSelectX payment={payment} />
+    
     },
   },
 ]
@@ -296,4 +264,43 @@ export default function AdminUsersTable({ data }: { data: UsersProps[] }) {
       </div>
     </div>
   )
+}
+
+
+
+// customs mine function
+export function ActionsDropdownSelectX ({ payment }: {payment: any}) {
+    let delUserId: number = payment?.id;
+      const deleteWithId = deleteUsers.bind(null, delUserId);
+      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      const [state, dispatch] = useFormState(deleteWithId, initialState);
+      if (state.success === false) {
+        toast.error(state.error);
+        state.success = null;
+        state.error = null;
+      } else if (state.success === true) {
+        toast.success(state.message);
+        state.success = null;
+        state.message = null;
+      }
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <form action={dispatch}>
+                <button type="submit">Delete</button>
+              </form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
 }

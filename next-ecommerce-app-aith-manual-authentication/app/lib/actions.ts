@@ -292,7 +292,7 @@ export const userLogin = async (prevState: ProductFormStateTypeProps, formData: 
     try {
         const { username, password } = validateFields.data;
 
-        let data = await fetch("https://fakestoreapi.com/auth/login", {
+        let data: any = await fetch("https://fakestoreapi.com/auth/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
