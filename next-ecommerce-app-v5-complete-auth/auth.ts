@@ -10,7 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // },
     providers: [
         GithubProvider({
-            profile(profile) {
+            profile(profile: any) {
                 console.log("Profile Github : ", profile);
 
                 let userRole = "Github User";
@@ -30,12 +30,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             clientSecret: process.env.GOOGLE_SECRET
         }),
         Credentials({
-            async authorize(credentials) {
+            async authorize(credentials: any) {
 
                 if (credentials?.username && credentials?.password) {
                     console.log("hello");
                     const { username, password } = credentials;
-                    let data = await fetch("https://fakestoreapi.com/auth/login", {
+                    let data: any = await fetch("https://fakestoreapi.com/auth/login", {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -62,14 +62,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     ],
     secret: process.env.AUTH_SECRET,
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user }: any) => {
             // token returns only (id, image, name, email) & user returns all things we pass in return object
             console.log(user, token, "kkkkkkkkkkkkkkkkkkkkkkkk");
             
             if (user) token.role = user.role;
             return token;
         },
-        session: async ({ session, token }) => {            
+        session: async ({ session, token }: any) => {            
             // session returns only (name, email, image, expires) & token returns mostly same but format different
             if (session?.user) session.user.role = token.role;
             return session;

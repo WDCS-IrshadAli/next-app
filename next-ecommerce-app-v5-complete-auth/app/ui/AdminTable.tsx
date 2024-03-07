@@ -117,54 +117,55 @@ export const columns: ColumnDef<ProductsProps>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      <AdminTableAction row={row} />
+      // const payment = row.original;
 
-      const router = useRouter();
-      let delUserId: number = payment?.id;
-      const deleteWithId = deleteProduct.bind(null, delUserId);
-      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
-      const [state, dispatch] = useFormState(deleteWithId, initialState);
-      if (state.success === false) {
-        toast.error(state.error);
-        state.success = null;
-        state.error = null;
-      } else if (state.success === true) {
-        toast.success(state.message);
-        state.success = null;
-        state.message = null;
-      }
+      // const router = useRouter();
+      // let delUserId: number = payment?.id;
+      // const deleteWithId = deleteProduct.bind(null, delUserId);
+      // const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      // const [state, dispatch] = useFormState(deleteWithId, initialState);
+      // if (state.success === false) {
+      //   toast.error(state.error);
+      //   state.success = null;
+      //   state.error = null;
+      // } else if (state.success === true) {
+      //   toast.success(state.message);
+      //   state.success = null;
+      //   state.message = null;
+      // }
 
 
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="dark">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment?.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <form action={dispatch}>
-                <button type="submit">Delete</button>
-              </form>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
-                Edit
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      // return (
+      //   <DropdownMenu>
+      //     <DropdownMenuTrigger asChild>
+      //       <Button variant="ghost" className="h-8 w-8 p-0">
+      //         <span className="sr-only">Open menu</span>
+      //         <DotsHorizontalIcon className="h-4 w-4" />
+      //       </Button>
+      //     </DropdownMenuTrigger>
+      //     <DropdownMenuContent align="end" className="dark">
+      //       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      //       {/* <DropdownMenuItem
+      //         onClick={() => navigator.clipboard.writeText(payment?.id)}
+      //       >
+      //         Copy payment ID
+      //       </DropdownMenuItem> */}
+      //       <DropdownMenuSeparator />
+      //       <DropdownMenuItem>
+      //         <form action={dispatch}>
+      //           <button type="submit">Delete</button>
+      //         </form>
+      //       </DropdownMenuItem>
+      //       <DropdownMenuItem>
+      //         <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
+      //           Edit
+      //         </button>
+      //       </DropdownMenuItem>
+      //     </DropdownMenuContent>
+      //   </DropdownMenu>
+      // )
     },
   },
 ]
@@ -312,4 +313,55 @@ export default function AdminTable({ data }: { data: ProductsProps[] }) {
       </div>
     </div>
   )
+}
+
+export function AdminTableAction ({row}: {row: any}) {
+      const payment = row.original;
+
+      const router = useRouter();
+      let delUserId: number = payment?.id;
+      const deleteWithId = deleteProduct.bind(null, delUserId);
+      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      const [state, dispatch] = useFormState(deleteWithId, initialState);
+      if (state.success === false) {
+        toast.error(state.error);
+        state.success = null;
+        state.error = null;
+      } else if (state.success === true) {
+        toast.success(state.message);
+        state.success = null;
+        state.message = null;
+      }
+
+
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="dark">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            {/* <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment?.id)}
+            >
+              Copy payment ID
+            </DropdownMenuItem> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <form action={dispatch}>
+                <button type="submit">Delete</button>
+              </form>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <button className="cursor-pointer" onClick={() => router.push(`/admin/products/edit/${delUserId}`)}>
+                Edit
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
 }

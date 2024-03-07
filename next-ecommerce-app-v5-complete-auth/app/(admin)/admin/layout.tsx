@@ -21,7 +21,7 @@ export default async function RootLayout({
           "min-h-screen font-sans antialiased bg-background dark text-primary",
         )}>
           <Providers>
-          <AdminLayoutResizable children={children} />
+          <AdminLayoutResizable childrenx={children} />
           </Providers>
         </div>
   );

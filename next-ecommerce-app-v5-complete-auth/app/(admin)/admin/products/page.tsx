@@ -20,7 +20,7 @@ const Products = async () => {
     }
   }
 
-  const getProductsData = await getAllProducts();
+  const getProductsData: any = await getAllProducts();
 
 
   return (

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 const Home = async () => {
-  const data = await getAllProducts();
+  const data: any = await getAllProducts();
   
   return (
     <>

@@ -7,7 +7,7 @@ import HomeNavbar from "./ui/HomeNavbar";
 import { auth } from "@/auth";
 // import AdminNavbar from "./ui/AdminNavbar";
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });

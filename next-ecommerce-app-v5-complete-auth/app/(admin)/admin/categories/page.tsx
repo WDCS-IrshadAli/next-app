@@ -5,7 +5,7 @@ import AdminCategoriesTable from '@/app/ui/AdminCategoriesTable';
 
 const Users = async () => {
 
-  const getCategoriesData = await getAllCategories();  
+  const getCategoriesData: any = await getAllCategories();  
 
   return (
     <>

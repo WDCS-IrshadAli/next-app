@@ -56,7 +56,7 @@ export const columns: ColumnDef<UsersProps>[] = [
         aria-label="Select all"
       />
     ),
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -69,7 +69,7 @@ export const columns: ColumnDef<UsersProps>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{`${row.getValue("name")?.firstname} ${   row.getValue("name")?.lastname}`}</div>
     ),
   },
@@ -86,26 +86,26 @@ export const columns: ColumnDef<UsersProps>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("username")}</div>,
+    cell: ({ row }: {row: any}) => <div className="lowercase">{row.getValue("username")}</div>,
   },
   {
     accessorKey: "email",
     header: "Email",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{row.getValue("email")}</div>
     ),
   },
   {
     accessorKey: "phone",
     header: "Phone",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{row.getValue("phone")}</div>
     ),
   },
   {
     accessorKey: "address",
     header: "City",
-    cell: ({ row }) => (
+    cell: ({ row }: {row: any}) => (
       <div className="capitalize">{row.getValue("address")?.city}</div>
     ),
   },
@@ -113,42 +113,44 @@ export const columns: ColumnDef<UsersProps>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
+    cell: ({ row }: {row: any}) => {
 
-      let delUserId: number = payment?.id;
-      const deleteWithId = deleteUsers.bind(null, delUserId);
-      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
-      const [state, dispatch] = useFormState(deleteWithId, initialState);
-      if (state.success === false) {
-        toast.error(state.error);
-        state.success = null;
-        state.error = null;
-      } else if (state.success === true) {
-        toast.success(state.message);
-        state.success = null;
-        state.message = null;
-      }
+      <AdminUsersTableAction row={row} />
+      // const payment = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <form action={dispatch}>
-                <button type="submit">Delete</button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      // let delUserId: number = payment?.id;
+      // const deleteWithId = deleteUsers.bind(null, delUserId);
+      // const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      // const [state, dispatch] = useFormState(deleteWithId, initialState);
+      // if (state.success === false) {
+      //   toast.error(state.error);
+      //   state.success = null;
+      //   state.error = null;
+      // } else if (state.success === true) {
+      //   toast.success(state.message);
+      //   state.success = null;
+      //   state.message = null;
+      // }
+
+      // return (
+      //   <DropdownMenu>
+      //     <DropdownMenuTrigger asChild>
+      //       <Button variant="ghost" className="h-8 w-8 p-0">
+      //         <span className="sr-only">Open menu</span>
+      //         <DotsHorizontalIcon className="h-4 w-4" />
+      //       </Button>
+      //     </DropdownMenuTrigger>
+      //     <DropdownMenuContent align="end">
+      //       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      //       <DropdownMenuSeparator />
+      //       <DropdownMenuItem>
+      //         <form action={dispatch}>
+      //           <button type="submit">Delete</button>
+      //         </form>
+      //       </DropdownMenuItem>
+      //     </DropdownMenuContent>
+      //   </DropdownMenu>
+      // )
     },
   },
 ]
@@ -296,4 +298,42 @@ export default function AdminUsersTable({ data }: { data: UsersProps[] }) {
       </div>
     </div>
   )
+}
+
+export function AdminUsersTableAction ({row}: {row: any}) {
+  const payment = row.original;
+
+      let delUserId: number = payment?.id;
+      const deleteWithId = deleteUsers.bind(null, delUserId);
+      const initialState: ProductFormStateTypeProps = { message: null, error: null, success: null };
+      const [state, dispatch] = useFormState(deleteWithId, initialState);
+      if (state.success === false) {
+        toast.error(state.error);
+        state.success = null;
+        state.error = null;
+      } else if (state.success === true) {
+        toast.success(state.message);
+        state.success = null;
+        state.message = null;
+      }
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <form action={dispatch}>
+                <button type="submit">Delete</button>
+              </form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
 }

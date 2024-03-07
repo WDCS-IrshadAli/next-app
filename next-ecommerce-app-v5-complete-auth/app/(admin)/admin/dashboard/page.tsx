@@ -40,7 +40,7 @@ const Dashboard = () => {
 
 export default Dashboard
 
-export function DashboardCardSkeleton () {
+function DashboardCardSkeleton () {
   return (
     <div className="flex flex-col space-y-3">
       <Skeleton className="h-[60px] w-[70vw] sm:w-[250px] rounded-xl" />
@@ -52,8 +52,8 @@ export function DashboardCardSkeleton () {
   )
 }
 
-export async function ProductsData () {
-  const productsData = await getAllProducts();
+async function ProductsData () {
+  const productsData: any = await getAllProducts();
 
   return (
     <div className="bg-gray-900 rounded-xl p-4 flex flex-col justify-center">
@@ -67,8 +67,8 @@ export async function ProductsData () {
   )
 }
 
-export async function UsersData () {
-  const usersData = await getAllUsers();  
+async function UsersData () {
+  const usersData: any = await getAllUsers();  
 
   return (
     <div className="bg-gray-900 rounded-xl p-4 flex flex-col justify-center">
@@ -82,8 +82,8 @@ export async function UsersData () {
   )
 }
 
-export async function CategoriesData () {
-  const categoriesData = await getAllCategories();
+async function CategoriesData () {
+  const categoriesData: any = await getAllCategories();
 
   return (
     <div className="bg-gray-900 rounded-xl p-4 flex flex-col justify-center">
