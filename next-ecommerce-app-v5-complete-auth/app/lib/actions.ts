@@ -420,3 +420,6 @@ export const githubLogin = async () => {
 export const googleLogin = async () => {
     await signIn("google");
 }
+
+// Home Page -------------------------------------------------------------
+// export const 
